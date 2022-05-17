@@ -1,31 +1,33 @@
 PROJECT:
   # Project name
-  title: ""
+  title: "MyUtils"
   # Project description
-  description: ""
+  description: "Helper classes and functions to work with"
   # Repository URL
-  repository: ""
+  repository: "https://github.com/Shchusia/MyUtils"
   # Project version
   release: "0.0.1"
 AUTHOR:
   # Author full info
-  author: ""
+  author: "Denis Shchutskyi"
   # How to contact the author
   # List of str:
-  # Author_contacts:
+  # author_contacts:
   #   - "email: email@example.com"
   #   - "telegram: @TelegramNick"
   #   - "etc"
-  author_contacts: []
+  author_contacts:
+    - "email: denisshchutskyi@gmail.com"
+    - "telegram: [DenisShchutskyi](https://t.me/DenisShchutskyi)"
 OPTIONS:
   # Available languages [py]
   language: "py"
   # If not specified, the documentation will be saved where the command was called from
-  path_to_root_folder: ""
+  path_to_root_folder: "./my_utils"
   extract_with_same_hierarchy: True
-  overwrite_if_file_exists: False
+  overwrite_if_file_exists: True
   # If not specified, the documentation will be saved where the command was called from
-  path_to_save: ""
+  path_to_save: "./docs"
   # File name to save the documentation
   # Used if argument: `extract_with_same_hierarchy: False`
   file_to_save: ""
