@@ -1,7 +1,9 @@
 """
 Module with functions for split iterable objects
 """
-from typing import Any, Generator, List, Optional, Tuple, Type, Union
+# pylint: disable=inconsistent-return-statements
+from collections.abc import Generator
+from typing import Any, List, Optional, Tuple, Type, Union
 
 
 def _validate_type(iterable: Union[List[Any], Tuple[Any, ...]]) -> Optional[Type]:
@@ -21,26 +23,35 @@ def _validate_type(iterable: Union[List[Any], Tuple[Any, ...]]) -> Optional[Type
     return type(iterable)
 
 
-def split(iterable: Union[List[Any], Tuple[Any, ...]], cnt: int) -> Generator:
+def split(
+    iterable: Union[List[Any], Tuple[Any, ...]], cnt: int, is_yield: bool = True
+) -> Generator:
     """
-    Method for splitting into equal parts generator
+    Method for splitting into equal cnt parts generator
     :param iterable: object to split
     :type iterable: Union[List[Any], Tuple[Any, ...]]
     :param cnt: cnt partitions
     :type cnt: int
+    :param is_yield: use yield or not for build generator
+    :type is_yield: bool
     :return: generator of split iterable object len generator equal cnt variable
     :rtype: Generator
     :raises TypeError: if incorrect type of `iterable` variable
     """
     _validate_type(iterable=iterable)
     k, j = divmod(len(iterable), cnt)  # type: int, int
-    return (
-        iterable[i * k + min(i, j) : (i + 1) * k + min(i + 1, j)] for i in range(cnt)
-    )
+    if is_yield:
+        for i in range(cnt):
+            yield iterable[i * k + min(i, j) : (i + 1) * k + min(i + 1, j)]
+    else:
+        return (
+            iterable[i * k + min(i, j) : (i + 1) * k + min(i + 1, j)]
+            for i in range(cnt)
+        )
 
 
 def split_as_iterable(
-    iterable: Union[List[Any], Tuple[Any, ...]], cnt: int
+    iterable: Union[List[Any], Tuple[Any, ...]], cnt: int, is_yield: bool = True
 ) -> Union[List[List[Any]], Tuple[Tuple[Any]]]:
     """
     Method for splitting into equal parts
@@ -48,9 +59,11 @@ def split_as_iterable(
     :type iterable: Union[List[Any], Tuple[Any, ...]]
     :param cnt: cnt partitions
     :type cnt: int
+    :param is_yield: use yield or not for build generator
+    :type is_yield: bool
     :return: iterable object with partitions
     :rtype: Union[List[Any], Tuple[Any, ...]]
     :raises TypeError: if incorrect type of `iterable` variable
     """
     _current_type = _validate_type(iterable)  # type: Type
-    return _current_type(split(iterable=iterable, cnt=cnt))
+    return _current_type(split(iterable=iterable, cnt=cnt, is_yield=is_yield))
