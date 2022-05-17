@@ -1,0 +1,268 @@
+"""
+Module with function for convert bytes size to correct size in kb/mb/gb
+"""
+
+from __future__ import annotations
+
+import math
+from enum import Enum
+from numbers import Number
+from typing import Optional, Tuple, Union
+
+from pydantic import BaseModel, Field
+
+
+class SystemTypes(Enum):
+    """
+    Enum of available conversion systems
+    """
+
+    SI: str = "si_name"
+    IEC: str = "iec_name"
+    VERBOSE: str = "verbose_name"
+    ALTERNATIVE: str = "alternative_name"
+    TRADITIONAL: str = "traditional_name"
+
+
+class SystemValue(BaseModel):
+    """
+    Class for storing information about different weights
+    """
+
+    pow: int = Field(
+        ...,
+        description="the power to which you need to raise the bytes "
+        "for the correct calculation",
+    )
+    traditional_name: str = Field(..., description="Traditional name for this type")
+    alternative_name: Union[str, Tuple[str, str]] = Field(
+        ..., description="Alternative name for this type"
+    )
+    verbose_name: Tuple[str, str] = Field(
+        ..., description="Full name without abbreviations"
+    )
+    iec_name: str = Field(..., description="IEC system name")
+    si_name: str = Field(None, description="Si system name")
+
+    value_base: int = Field(
+        None, description="The number of bytes in one unit of this type"
+    )
+    value_si: int = Field(
+        None, description="The number of bytes in one unit of this type in system si"
+    )
+
+    def __init__(self, **data) -> None:
+        super().__init__(**data)
+        self.value_base = 1024**self.pow
+        self.value_si = 1000**self.pow
+        if not self.si_name:
+            self.si_name = self.traditional_name
+
+    def get_size_suffix(
+        self, system: Optional[str] = "traditional"
+    ) -> Optional[Union[str, Tuple[str, str]]]:
+        """
+        method return str title for chose type
+        :param system: title system for view
+         allowed: [si, iec, verbose, alternative, traditional]
+        :type system: str
+        :return: names for chose system
+        :rtype: Union[str, Tuple[str, str]]
+        :raise ValueError: if there is no selected system
+        """
+        try:
+            name_key = SystemTypes[system].value
+            return self.__getattribute__(name_key)
+        except KeyError:
+            raise ValueError(
+                f"Incorrect name system."
+                f" Allowed names: {[i.name for i in SystemTypes]}"
+            ) from BaseException
+
+    def get_amount(
+        self,
+        bytes_value: int,
+        round_to: Optional[int] = 2,
+        is_si: Optional[bool] = False,
+    ) -> float:
+        """
+        Method get size of bytes value in system
+        :param bytes_value:  bytes to convert
+        :type bytes_value: int
+        :param round_to: decimal point rounding precision
+        :type round_to:  Optional[int]
+        :param is_si: is to 'si' system convert
+        :type is_si: Optional[bool]
+        :return:
+        """
+        if is_si:
+            val = self.value_si
+        else:
+            val = self.value_base
+        return round(bytes_value / val, round_to)
+
+    def get_normalized_size(
+        self,
+        bytes_value: int,
+        system: Optional[str] = "traditional",
+        round_to: Optional[int] = 2,
+    ) -> str:
+        """
+        Method convert bytes value in chose system
+        :param bytes_value: bytes value to convert
+        :type bytes_value: int
+        :param system: system to which to convert
+        :type system: str
+        :param round_to:
+        :type round_to: decimal point rounding precision
+        :return: converted value
+        :rtype: str
+        :raise ValueError: if incorrect system name
+        """
+        is_si = system == "SI"
+        amount = self.get_amount(
+            bytes_value=bytes_value, round_to=round_to, is_si=is_si
+        )
+        suffix_names = self.get_size_suffix(system=system)
+
+        if isinstance(suffix_names, tuple):
+            singular, multiple = suffix_names
+            if amount == 1.0:
+                suffix_amount = singular
+            else:
+                suffix_amount = multiple
+        else:
+            suffix_amount = suffix_names
+        frac, whole = math.modf(amount)
+        if frac == 0.0:
+            amount = int(whole)
+        return f"{amount}{suffix_amount}"
+
+    def __le__(self, other: Union[Number, SystemValue]):
+        result: bool = False
+        if isinstance(other, SystemValue):
+            result = self.value_base <= other.value_base
+        elif isinstance(other, Number):
+            result = self.value_base <= other  # type: ignore
+        else:
+            raise TypeError("incorrect value to compare")
+        return result
+
+    def __ge__(self, other: Union[Number, SystemValue]):
+        result: bool = False
+        if isinstance(other, SystemValue):
+            result = self.value_base >= other.value_base
+        elif isinstance(other, Number):
+            result = self.value_base >= other  # type: ignore
+        else:
+            raise TypeError("incorrect value type to compare")
+        return result
+
+
+LIST_SYSTEMS = [
+    SystemValue(
+        pow=5,
+        traditional_name="P",
+        alternative_name="PB",
+        verbose_name=(" petabyte", " petabytes"),
+        iec_name="Pi",
+    ),
+    SystemValue(
+        pow=4,
+        traditional_name="T",
+        alternative_name="TB",
+        verbose_name=(" terabyte", " terabytes"),
+        iec_name="Ti",
+    ),
+    SystemValue(
+        pow=3,
+        traditional_name="G",
+        alternative_name="GB",
+        verbose_name=(" gigabyte", " gigabytes"),
+        iec_name="Gi",
+    ),
+    SystemValue(
+        pow=2,
+        traditional_name="M",
+        alternative_name="MB",
+        verbose_name=(" megabyte", " megabytes"),
+        iec_name="Mi",
+    ),
+    SystemValue(
+        pow=1,
+        traditional_name="K",
+        alternative_name="KB",
+        verbose_name=(" kilobyte", " kilobytes"),
+        iec_name="Ki",
+    ),
+    SystemValue(
+        pow=0,
+        traditional_name="B",
+        alternative_name=(" byte", " bytes"),
+        verbose_name=(" byte", " bytes"),
+        iec_name="",
+    ),
+]
+
+
+def size(
+    bytes_value: int, system: Optional[str] = "traditional", round_to: int = 2
+) -> str:
+    """
+    Method for print size of file from bytes to pretty print
+    :param bytes_value: bytes to convert
+    :type bytes_value:
+    :param system:
+    :type system:
+    :param round_to: decimal point rounding precision
+    :type round_to: Optional[int]
+    :return: converted bytes_value to pretty string
+    :rtype: str
+    :raise ValueError: if incorrect system name
+
+    :example:
+    Using the traditional system, where a factor of 1024 is used::
+
+    >>> size(10)
+    '10B'
+    >>> size(2000)
+    '1.95K'
+    >>> size(20000)
+    '19.53K'
+    >>> size(200000)
+    '0.19M'
+    >>> size(1000000)
+    '0.95M'
+    >>> size(2000000)
+    '1.91M'
+    # use si
+    >>> size(10, system="si")
+    '10B'
+    >>> size(2000, system="si")
+    '2K'
+    >>> size(20000, system="si")
+    '20K'
+    >>> size(200000, system="si")
+    '0.2M'
+    >>> size(1000000, system="si")
+    '1M'
+    >>> size(2000000, system="si")
+    '2M'
+    """
+    if not system:
+        system = "traditional"
+    system = system.upper()
+    if system not in [i.name for i in SystemTypes]:
+        raise ValueError(
+            f"Incorrect system name - `{system}`."
+            f" Allowed systems {[i.name for i in SystemTypes]}"
+        )
+    factor = None  # type: Optional[SystemValue]
+    for _factor in LIST_SYSTEMS:
+        if bytes_value >= _factor.value_base / 10:
+            factor = _factor
+            break
+
+    return factor.get_normalized_size(
+        bytes_value=bytes_value, system=system, round_to=round_to
+    )
