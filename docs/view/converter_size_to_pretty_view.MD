@@ -1,9 +1,9 @@
-# Module `converter_size_to_view.py`
+# Module `converter_size_to_pretty_view.py`
 ```text
 Module with function for convert bytes size to correct size in kb/mb/gb
 ```
 
-> Path: `my_utils\view\converter_size_to_view.py`
+> Path: `my_utils\view\converter_size_to_pretty_view.py`
 ## Class `SystemTypes`
 ```text
 Enum of available conversion systems
@@ -12,11 +12,11 @@ Enum of available conversion systems
 ### Basses(s)
 + Enum
 ### SubElement(s)
- > `si`: str = "si_name"
- > `iec`: str = "iec_name"
- > `verbose`: str = "verbose_name"
- > `alternative`: str = "alternative_name"
- > `traditional`: str = "traditional_name"
+ > `SI`: str = "si_name"
+ > `IEC`: str = "iec_name"
+ > `VERBOSE`: str = "verbose_name"
+ > `ALTERNATIVE`: str = "alternative_name"
+ > `TRADITIONAL`: str = "traditional_name"
 ## Class `SystemValue`
 ```text
 Class for storing information about different weights
@@ -42,7 +42,8 @@ Class for storing information about different weights
  > ```
  > 
  > ### Argument(s)
- > + `system`: Optional[str] - title system for view allowed: [si, iec, verbose, alternative, traditional]
+ > + `system`: Optional[str] - title system for view
+ > allowed: [si, iec, verbose, alternative, traditional]
  > ### Return
  > ```text
  > names for chose system
@@ -74,7 +75,16 @@ Class for storing information about different weights
  > ```
  > 
  > #### Declared returns: `str`
+ > ## Function  `__lt__`
+ > ### Argument(s)
+ > + `other` - empty doc string
  > ## Function  `__le__`
+ > ### Argument(s)
+ > + `other`: Union[Number, SystemValue] - empty doc string
+ > ## Function  `__gt__`
+ > ### Argument(s)
+ > + `other`: Union[Number, SystemValue] - empty doc string
+ > ## Function  `__eq__`
  > ### Argument(s)
  > + `other`: Union[Number, SystemValue] - empty doc string
  > ## Function  `__ge__`

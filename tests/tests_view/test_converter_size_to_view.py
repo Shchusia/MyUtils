@@ -7,7 +7,7 @@ from typing import Dict, List, Optional, Tuple, Type, TypeVar, Union
 import pytest
 from pydantic import BaseModel
 
-from my_utils.view.converter_size_to_view import size
+from my_utils.view.converter_size_to_pretty_view import SystemValue, size
 
 _E = TypeVar("_E", bound=Type[BaseException])  # noqa
 
@@ -390,12 +390,64 @@ CORRECT_VALUES = {
     ],
 }  # type: Dict[str, List[TestCase]]
 
+tests_rounded = [
+    TestCase(
+        args=FunctionSizeArgs(bytes_value=1024**1 * 3 + 1, system="si", round_to=3),
+        result="3.073K",
+    ),
+    TestCase(
+        args=FunctionSizeArgs(bytes_value=1024**1 * 3 + 1, system="si", round_to=2),
+        result="3.07K",
+    ),
+    TestCase(
+        args=FunctionSizeArgs(bytes_value=1024**1 * 3 + 1, system="si", round_to=1),
+        result="3.1K",
+    ),
+    TestCase(
+        args=FunctionSizeArgs(bytes_value=1024**1 * 3 + 1, system="si", round_to=0),
+        result="3.1K",
+        is_raises=True,
+        raises=(ValueError,),
+    ),
+]
+
 
 def test_size() -> None:
     """
     test function for function my_utils.view.converter_size_to_view.size()
     :return: nothing
     """
+    res_empt = size(
+        bytes_value=1024**0 * 3 + 1,
+    )
+    res_trad = size(bytes_value=1024**0 * 3 + 1, system="traditional")
+    res_ver = size(bytes_value=1024**0 * 3 + 1, system="verbose")
+    assert res_ver != res_empt
+    assert res_ver != res_trad
+    assert res_trad == res_empt
+
+    with pytest.raises(TypeError):
+        size(1024**1 * 3 + 1, system="si", round_to="-1")  # type: ignore
+    with pytest.raises(TypeError):
+        size(1024**1 * 3 + 1, system="si", round_to=0.1)  # type: ignore
+    with pytest.raises(ValueError):
+        size(1024**1 * 3 + 1, system="si", round_to=-1)
+
+    with pytest.raises(ValueError):
+        size(1024**1 * 3 + 1, system="si", round_to=0)
+    with pytest.raises(ValueError):
+        size(1024**1 * 3 + 1, system="sis", round_to=0)
+
+    for test_case in tests_rounded:
+        if test_case.is_raises:
+            with pytest.raises(test_case.raises):
+                size(**test_case.args.dict())
+        else:
+            if test_case.is_equal:
+                assert test_case.result == size(**test_case.args.dict())
+            else:
+                assert test_case.result != size(**test_case.args.dict())
+
     for val in CORRECT_VALUES.values():
         for test_case in val:
             if test_case.is_raises:
@@ -406,3 +458,55 @@ def test_size() -> None:
                     assert test_case.result == size(**test_case.args.dict())
                 else:
                     assert test_case.result != size(**test_case.args.dict())
+
+
+def test_system_value():
+    """
+    method test SystemValue
+    :return: nothing
+    """
+    my_sv_small = SystemValue(
+        pow=1,
+        traditional_name="T",
+        alternative_name="Te",
+        verbose_name=(" test", " tests"),
+        iec_name="Gi",
+        si_name="gi",
+    )
+    my_sv = SystemValue(
+        pow=3,
+        traditional_name="TB",
+        alternative_name="TBe",
+        verbose_name=(" big test", " big tests"),
+        iec_name="ti",
+    )
+    assert my_sv.si_name == my_sv.traditional_name
+    assert my_sv_small.si_name != my_sv_small.traditional_name
+    my_sv.get_size_suffix()
+    my_sv.get_size_suffix("verbose")
+    with pytest.raises(ValueError):
+        my_sv.get_size_suffix("test")
+
+    class TestClass:
+        """test class"""
+
+    test_class = TestClass()
+    with pytest.raises(TypeError):
+        assert my_sv > test_class
+    with pytest.raises(TypeError):
+        assert my_sv >= test_class
+    with pytest.raises(TypeError):
+        assert my_sv < test_class
+    with pytest.raises(TypeError):
+        assert my_sv <= test_class
+    with pytest.raises(TypeError):
+        assert my_sv == test_class
+
+    assert my_sv >= 500
+    assert my_sv <= 50000000000
+    assert my_sv > my_sv_small
+    assert my_sv >= my_sv_small
+    assert my_sv != my_sv_small
+    assert my_sv_small < my_sv
+    assert my_sv_small <= my_sv
+    assert my_sv_small == my_sv_small.value_base
