@@ -6,7 +6,7 @@ from typing import List, Tuple, Union
 
 import pytest
 
-from my_utils.iterables.chunk import chunks
+from my_utilities.iterables.chunk import chunks
 
 
 class TestDict(dict):
@@ -24,7 +24,7 @@ test_dict_custom_range = TestDict(test_dict_range)  # type: dict[int, int]
 
 def test_chunk() -> None:
     """
-    test function for  my_utils.iterables.chunk.chunks
+    test function for  my_utilities.iterables.chunk.chunks
     :return: nothing
     """
 

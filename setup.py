@@ -8,7 +8,7 @@ from typing import Optional
 
 from setuptools import setup
 
-LIB_NAME = "my_utils"
+LIB_NAME = "my_utilities"
 HERE = pathlib.Path(__file__)
 DESCRIPTION = """
 Library with helper functions and classes

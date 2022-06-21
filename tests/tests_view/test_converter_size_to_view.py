@@ -1,5 +1,5 @@
 """
-Tests for module `my_utils.view.converter_size_to_view`
+Tests for module `my_utilities.view.converter_size_to_view`
 """
 # pylint: disable=too-few-public-methods
 from typing import Dict, List, Optional, Tuple, Type, TypeVar, Union
@@ -7,7 +7,7 @@ from typing import Dict, List, Optional, Tuple, Type, TypeVar, Union
 import pytest
 from pydantic import BaseModel
 
-from my_utils.view.converter_size_to_pretty_view import SystemValue, size
+from my_utilities.view.converter_size_to_pretty_view import SystemValue, size
 
 _E = TypeVar("_E", bound=Type[BaseException])  # noqa
 
@@ -414,7 +414,7 @@ tests_rounded = [
 
 def test_size() -> None:
     """
-    test function for function my_utils.view.converter_size_to_view.size()
+    test function for function my_utilities.view.converter_size_to_view.size()
     :return: nothing
     """
     res_empt = size(
