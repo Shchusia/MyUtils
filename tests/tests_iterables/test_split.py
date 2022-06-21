@@ -24,13 +24,9 @@ def test_split() -> None:
     gen_split = split(test_list_range, CNT_CHUNKS)
     assert isinstance(gen_split, GeneratorType)
     with pytest.raises(TypeError):
-        list(split(test_set_range, CNT_CHUNKS, is_yield=False))  # type: ignore
+        list(split(test_set_range, CNT_CHUNKS))  # type: ignore
     with pytest.raises(TypeError):
-        list(split(test_dict_range, CNT_CHUNKS, is_yield=False))  # type: ignore
-    with pytest.raises(TypeError):
-        list(split(test_set_range, CNT_CHUNKS, is_yield=True))  # type: ignore
-    with pytest.raises(TypeError):
-        list(split(test_dict_range, CNT_CHUNKS, is_yield=True))  # type: ignore
+        list(split(test_dict_range, CNT_CHUNKS))  # type: ignore
 
     assert len(list(gen_split)) == CNT_CHUNKS
 

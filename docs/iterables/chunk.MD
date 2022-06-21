@@ -12,9 +12,9 @@ Method for splitting into many parts with len size_chunk generator
 ### Argument(s)
 + `iterable`: Union[List[Any], Tuple[Any, ...]] - object to split
 + `size_chunk`: int - size_chunk
-+ `is_yield`: bool - use yield or not for build generator
 ### Raise(s)
-+ `TypeError` - if incorrect type of `iterable` variable
++ `TypeError` - if incorrect type of `iterable` or `size_chunk` variables
++ `ValueError` - if `size_chunk` variable is not in a valid value
 ### Return
 ```text
 generator of split iterable object len generator equal cnt variable

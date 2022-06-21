@@ -25,7 +25,6 @@ Method for splitting into equal cnt parts generator
 ### Argument(s)
 + `iterable`: Union[List[Any], Tuple[Any, ...]] - object to split
 + `cnt`: int - cnt partitions
-+ `is_yield`: bool - use yield or not for build generator
 ### Raise(s)
 + `TypeError` - if incorrect type of `iterable` variable
 ### Return
@@ -42,7 +41,6 @@ Method for splitting into equal parts
 ### Argument(s)
 + `iterable`: Union[List[Any], Tuple[Any, ...]] - object to split
 + `cnt`: int - cnt partitions
-+ `is_yield`: bool - use yield or not for build generator
 ### Raise(s)
 + `TypeError` - if incorrect type of `iterable` variable
 ### Return
