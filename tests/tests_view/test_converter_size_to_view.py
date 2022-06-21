@@ -7,7 +7,7 @@ from typing import Dict, List, Optional, Tuple, Type, TypeVar, Union
 import pytest
 from pydantic import BaseModel
 
-from my_utils.view.converter_size_to_view import size
+from my_utils.view.converter_size_to_pretty_view import size
 
 _E = TypeVar("_E", bound=Type[BaseException])  # noqa
 
