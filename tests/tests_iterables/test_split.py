@@ -5,7 +5,7 @@ from types import GeneratorType
 
 import pytest
 
-from my_utils.iterables.split import split, split_as_iterable
+from my_utilities.iterables.split import split, split_as_iterable
 
 CNT_CHUNKS = 2
 SIZE_ITERABLE_OBJECTS = 10
@@ -18,7 +18,7 @@ test_dict_range = {i: i for i in range(SIZE_ITERABLE_OBJECTS)}  # type: dict[int
 
 def test_split() -> None:
     """
-    test method my_utils.iterables.split.split()
+    test method my_utilities.iterables.split.split()
     :return: nothing
     """
     gen_split = split(test_list_range, CNT_CHUNKS)
@@ -33,7 +33,7 @@ def test_split() -> None:
 
 def test_split_as_iterable() -> None:
     """
-    test method my_utils.iterables.split.split_as_iterable()
+    test method my_utilities.iterables.split.split_as_iterable()
     :return: nothing
     """
     split_list = split_as_iterable(test_list_range, CNT_CHUNKS)

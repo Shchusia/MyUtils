@@ -1,11 +1,11 @@
 """
-tests for module `my_utils.probability.probability_event_occurring.py`
+tests for module `my_utilities.probability.probability_event_occurring.py`
 """
 from decimal import Decimal
 
 import pytest
 
-from my_utils.probability.probability_event_occurring import is_fate_in_awe
+from my_utilities.probability.probability_event_occurring import is_fate_in_awe
 
 
 def test_is_fate_in_awe() -> None:

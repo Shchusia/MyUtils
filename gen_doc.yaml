@@ -2,7 +2,7 @@ PROJECT:
   # Project name
   title: "MyUtils"
   # Project description
-  description: "Helper classes and functions to work with"
+  description: "Library with helper functions and classes"
   # Repository URL
   repository: "https://github.com/Shchusia/MyUtils"
   # Project version
@@ -23,7 +23,7 @@ OPTIONS:
   # Available languages [py]
   language: "py"
   # If not specified, the documentation will be saved where the command was called from
-  path_to_root_folder: "./my_utils"
+  path_to_root_folder: "./my_utilities"
   extract_with_same_hierarchy: True
   overwrite_if_file_exists: True
   # If not specified, the documentation will be saved where the command was called from

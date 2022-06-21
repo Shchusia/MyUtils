@@ -7,11 +7,11 @@
 ### Installation
 
 ```bash
-pip install my_utils
+pip install my_utilities
 ```
 
 
 What contains:
-+ helper functions for working with [iterables](./my_utils/iterables/README.MD) objects 
-+ helper functions for working with [probability](./my_utils/probability/README.MD)
-+ helper functions for pretty [view](./my_utils/view/README.MD)
++ helper functions for working with [iterables](my_utilities/iterables/README.MD) objects 
++ helper functions for working with [probability](my_utilities/probability/README.MD)
++ helper functions for pretty [view](my_utilities/view/README.MD)
