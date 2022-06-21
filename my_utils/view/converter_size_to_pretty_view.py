@@ -70,6 +70,7 @@ class SystemValue(BaseModel):
         :rtype: Union[str, Tuple[str, str]]
         :raise ValueError: if there is no selected system
         """
+        system = system.upper()
         try:
             name_key = SystemTypes[system].value
             return self.__getattribute__(name_key)
@@ -119,6 +120,7 @@ class SystemValue(BaseModel):
         :rtype: str
         :raise ValueError: if incorrect system name
         """
+        system = system.upper()
         is_si = system == "SI"
         amount = self.get_amount(
             bytes_value=bytes_value, round_to=round_to, is_si=is_si
@@ -138,25 +140,31 @@ class SystemValue(BaseModel):
             amount = int(whole)
         return f"{amount}{suffix_amount}"
 
-    def __le__(self, other: Union[Number, SystemValue]):
+    def __lt__(self, other):
         result: bool = False
         if isinstance(other, SystemValue):
-            result = self.value_base <= other.value_base
+            result = self.value_base < other.value_base
         elif isinstance(other, Number):
-            result = self.value_base <= other  # type: ignore
+            result = self.value_base < other
         else:
             raise TypeError("incorrect value to compare")
         return result
 
-    def __ge__(self, other: Union[Number, SystemValue]):
+    def __le__(self, other: Union[Number, SystemValue]):
+        return self < other or self == other
+
+    def __gt__(self, other: Union[Number, SystemValue]):
         result: bool = False
         if isinstance(other, SystemValue):
-            result = self.value_base >= other.value_base
+            result = self.value_base > other.value_base
         elif isinstance(other, Number):
-            result = self.value_base >= other  # type: ignore
+            result = self.value_base > other  # type: ignore
         else:
             raise TypeError("incorrect value type to compare")
         return result
+
+    def __ge__(self, other: Union[Number, SystemValue]):
+        return self > other or self == other
 
 
 LIST_SYSTEMS = [
@@ -218,7 +226,8 @@ def size(
     :type round_to: Optional[int]
     :return: converted bytes_value to pretty string
     :rtype: str
-    :raise ValueError: if incorrect system name
+    :raise ValueError: if incorrect system name or round_to is less 0
+    :raise TypeError: if incorrect type round_to
 
     :example:
     Using the traditional system, where a factor of 1024 is used::
@@ -249,6 +258,10 @@ def size(
     >>> size(2000000, system="si")
     '2M'
     """
+    if not isinstance(round_to, int):
+        raise TypeError()
+    if round_to < 1:
+        raise ValueError()
     if not system:
         system = "traditional"
     system = system.upper()
