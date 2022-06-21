@@ -492,8 +492,6 @@ def test_system_value():
 
     test_class = TestClass()
     with pytest.raises(TypeError):
-        assert my_sv == test_class
-    with pytest.raises(TypeError):
         assert my_sv > test_class
     with pytest.raises(TypeError):
         assert my_sv >= test_class
@@ -501,6 +499,8 @@ def test_system_value():
         assert my_sv < test_class
     with pytest.raises(TypeError):
         assert my_sv <= test_class
+    with pytest.raises(TypeError):
+        assert my_sv == test_class
 
     assert my_sv >= 500
     assert my_sv <= 50000000000

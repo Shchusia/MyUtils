@@ -1,7 +1,7 @@
 """
 Module with function for convert bytes size to correct size in kb/mb/gb
 """
-
+# pylint: disable=super-with-arguments
 from __future__ import annotations
 
 import math
@@ -159,6 +159,16 @@ class SystemValue(BaseModel):
             result = self.value_base > other.value_base
         elif isinstance(other, Number):
             result = self.value_base > other  # type: ignore
+        else:
+            raise TypeError("incorrect value type to compare")
+        return result
+
+    def __eq__(self, other: Union[Number, SystemValue]):  # type: ignore
+        result: bool = False
+        if isinstance(other, SystemValue):
+            result = super(SystemValue, self).__eq__(other)
+        elif isinstance(other, Number):
+            result = self.value_base == other
         else:
             raise TypeError("incorrect value type to compare")
         return result
