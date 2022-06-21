@@ -2,7 +2,7 @@ PROJECT:
   # Project name
   title: "MyUtils"
   # Project description
-  description: "Helper classes and functions to work with"
+  description: "Library with helper functions and classes"
   # Repository URL
   repository: "https://github.com/Shchusia/MyUtils"
   # Project version
