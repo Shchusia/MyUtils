@@ -34,11 +34,11 @@ def test_remove_outliers():
     with pytest.raises(ValueError):
         remove_outliers(df, None, VALUE_TO_REPLACE)
     with pytest.raises(ValueError):
-        remove_outliers(df, "A", VALUE_TO_REPLACE, percent=-0.0001)
+        remove_outliers(df, "A", VALUE_TO_REPLACE, quantile_percent=-0.0001)
     with pytest.raises(ValueError):
-        remove_outliers(df, "A", VALUE_TO_REPLACE, percent=-0.1)
+        remove_outliers(df, "A", VALUE_TO_REPLACE, quantile_percent=-0.1)
     with pytest.raises(ValueError):
-        remove_outliers(df, "A", VALUE_TO_REPLACE, percent=1.001)
+        remove_outliers(df, "A", VALUE_TO_REPLACE, quantile_percent=1.001)
 
     replaced_df = remove_outliers(deepcopy(df), "A", VALUE_TO_REPLACE)
     assert replaced_df["A"].tolist()[index_outliers_a_column] == VALUE_TO_REPLACE

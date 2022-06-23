@@ -12,15 +12,19 @@ def remove_outliers(
     df: pd.DataFrame,
     field_name: str,
     replace_value: Any,
-    percent: float = 0.25,
+    quantile_percent: float = 0.25,
     multiplier: float = 1.5,
 ) -> pd.DataFrame:
     """
     Replace outliers (indicated following interquartile range methodology).
     Use this function for time series data where you cannot drop outliers.
+    Attention!!!
+    quantile_percent and multiplier variables are specified by default
+     according to the formula. By changing them, you take full responsibility
+      for yourself.
     :param pd.DataFrame df: data frame to remove outliers from
     :param str field_name: name field df to remove outlier
-    :param float percent:
+    :param float quantile_percent:
     :param Any replace_value:
     :param float multiplier:
     :return: changed df
@@ -29,11 +33,11 @@ def remove_outliers(
     """
     if field_name not in df.columns:
         raise ValueError
-    if not 0 <= percent <= 1:
+    if not 0 <= quantile_percent <= 1:
         raise ValueError
     # Computing IQR
-    q1 = df[field_name].quantile(percent)
-    q3 = df[field_name].quantile(1 - percent)
+    q1 = df[field_name].quantile(quantile_percent)
+    q3 = df[field_name].quantile(1 - quantile_percent)
     iqr = q3 - q1
 
     df.loc[
