@@ -49,8 +49,6 @@ def split_as_iterable(
     :type iterable: Union[List[Any], Tuple[Any, ...]]
     :param cnt: cnt partitions
     :type cnt: int
-    :param is_yield: use yield or not for build generator
-    :type is_yield: bool
     :return: iterable object with partitions
     :rtype: Union[List[Any], Tuple[Any, ...]]
     :raises TypeError: if incorrect type of `iterable` variable

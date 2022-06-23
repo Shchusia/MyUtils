@@ -53,7 +53,7 @@ def get_long_description() -> str:
     :return:  description
     """
     path_readme_pypi = pathlib.Path("README_PYPI.md")
-    path_readme = pathlib.Path("README_PYPI.md")
+    path_readme = pathlib.Path("README.MD")
     if path_readme_pypi.exists():
         with open(path_readme_pypi, "r", encoding="utf8") as file:
             return file.read()
