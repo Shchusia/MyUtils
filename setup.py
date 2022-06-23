@@ -76,5 +76,16 @@ setup(
     packages=get_packages(),
     keywords=["pip", LIB_NAME],
     python_requires=">=3.7",
-    install_requires=["pydantic==1.9.0"],
+    install_requires=[
+        "pydantic==1.9.0",
+        "fpdf2==2.3.2",
+        "fpdf==1.7.2",
+        "pandas==1.2.3",
+        "numpy==1.20.2",
+    ],
+    package_data={
+        f"{LIB_NAME}.src": [
+            "*.ttf",
+        ]
+    },
 )
