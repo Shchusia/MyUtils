@@ -52,7 +52,7 @@ class SystemValue(BaseModel):
         None, description="The number of bytes in one unit of this type in system si"
     )
 
-    def __init__(self, **data: dict[Any, Any]) -> None:
+    def __init__(self, **data: Any) -> None:
         super().__init__(**data)
         self.value_base = 1024**self.pow
         self.value_si = 1000**self.pow
@@ -141,19 +141,19 @@ class SystemValue(BaseModel):
             amount = int(whole)
         return f"{amount}{suffix_amount}"
 
-    def __lt__(self, other):
+    def __lt__(self, other: Number | SystemValue) -> bool:
         if isinstance(other, SystemValue):
             result = self.value_base < other.value_base
         elif isinstance(other, Number):
-            result = self.value_base < other
+            result = self.value_base < other  # type: ignore
         else:
             raise TypeError("incorrect value to compare")
         return result
 
-    def __le__(self, other: Number | SystemValue):
+    def __le__(self, other: Number | SystemValue) -> bool:
         return self < other or self == other
 
-    def __gt__(self, other: Number | SystemValue):
+    def __gt__(self, other: Number | SystemValue) -> bool:
         result: bool = False
         if isinstance(other, SystemValue):
             result = self.value_base > other.value_base
@@ -163,7 +163,7 @@ class SystemValue(BaseModel):
             raise TypeError("incorrect value type to compare")
         return result
 
-    def __eq__(self, other: Number | SystemValue):  # type: ignore
+    def __eq__(self, other: Number | SystemValue) -> bool:  # type: ignore
         result: bool = False
         if isinstance(other, SystemValue):
             result = super().__eq__(other)
@@ -173,7 +173,7 @@ class SystemValue(BaseModel):
             raise TypeError("incorrect value type to compare")
         return result
 
-    def __ge__(self, other: Number | SystemValue):
+    def __ge__(self, other: Number | SystemValue) -> bool:
         return self > other or self == other
 
 

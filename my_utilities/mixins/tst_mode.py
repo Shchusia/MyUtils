@@ -1,6 +1,7 @@
 import functools
 import inspect
 import os
+from typing import Any
 import warnings
 
 
@@ -34,7 +35,7 @@ class TestModeMixin:
 
         return self._dict_tst_mode
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         """
         Initialize mixin and patch test methods if test mode is enabled.
 
@@ -43,7 +44,7 @@ class TestModeMixin:
         - IS_RAISE_TEST_MODE=1 → raises exceptions instead of warnings
         """
         self._is_raise_test: int = int(os.environ.get("IS_RAISE_TEST_MODE", "0")) == 1
-        super().__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)  # type: ignore
         self._patch_test_methods()
 
     def __handle_error(self, msg: str, error: type[Exception]) -> None:
