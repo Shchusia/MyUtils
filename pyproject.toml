@@ -1,5 +1,5 @@
 [project]
-name = "myutils"
+name = "my_utilities"
 version = "0.1.1"
 description = "Add your description here"
 readme = "README.md"
