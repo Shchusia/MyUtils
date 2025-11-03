@@ -5,7 +5,7 @@ Tests for module `my_utilities.view.converter_size_to_view`
 from typing import Dict, List, Optional, Tuple, Type, TypeVar, Union
 
 import pytest
-from pydantic import BaseModel
+from pydantic import BaseModel,ConfigDict
 
 from my_utilities.view.converter_size_to_pretty_view import SystemValue, size
 
@@ -33,12 +33,7 @@ class TestCase(BaseModel):
     is_equal: bool = True
     raises: Optional[Union[Tuple[_E], _E]] = None  # type: ignore
 
-    class Config:
-        """
-        config model
-        """
-
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
 CORRECT_VALUES = {
@@ -420,7 +415,7 @@ def test_size() -> None:
     res_empt = size(
         bytes_value=1024**0 * 3 + 1,
     )
-    res_trad = size(bytes_value=1024**0 * 3 + 1, system="traditional")
+    res_trad = size(bytes_value=1024**0 * 3 + 1, system=None)
     res_ver = size(bytes_value=1024**0 * 3 + 1, system="verbose")
     assert res_ver != res_empt
     assert res_ver != res_trad
@@ -441,23 +436,23 @@ def test_size() -> None:
     for test_case in tests_rounded:
         if test_case.is_raises:
             with pytest.raises(test_case.raises):
-                size(**test_case.args.dict())
+                size(**test_case.args.model_dump())
         else:
             if test_case.is_equal:
-                assert test_case.result == size(**test_case.args.dict())
+                assert test_case.result == size(**test_case.args.model_dump())
             else:
-                assert test_case.result != size(**test_case.args.dict())
+                assert test_case.result != size(**test_case.args.model_dump())
 
     for val in CORRECT_VALUES.values():
         for test_case in val:
             if test_case.is_raises:
                 with pytest.raises(test_case.raises):
-                    size(**test_case.args.dict())
+                    size(**test_case.args.model_dump())
             else:
                 if test_case.is_equal:
-                    assert test_case.result == size(**test_case.args.dict())
+                    assert test_case.result == size(**test_case.args.model_dump())
                 else:
-                    assert test_case.result != size(**test_case.args.dict())
+                    assert test_case.result != size(**test_case.args.model_dump())
 
 
 def test_system_value():

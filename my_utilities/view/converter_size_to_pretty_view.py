@@ -1,27 +1,28 @@
 """
 Module with function for convert bytes size to correct size in kb/mb/gb
 """
+
 # pylint: disable=super-with-arguments
 from __future__ import annotations
 
+from enum import StrEnum
 import math
-from enum import Enum
 from numbers import Number
-from typing import Optional, Tuple, Union
+from typing import Any
 
 from pydantic import BaseModel, Field
 
 
-class SystemTypes(Enum):
+class SystemTypes(StrEnum):
     """
     Enum of available conversion systems
     """
 
-    SI: str = "si_name"
-    IEC: str = "iec_name"
-    VERBOSE: str = "verbose_name"
-    ALTERNATIVE: str = "alternative_name"
-    TRADITIONAL: str = "traditional_name"
+    SI = "si_name"
+    IEC = "iec_name"
+    VERBOSE = "verbose_name"
+    ALTERNATIVE = "alternative_name"
+    TRADITIONAL = "traditional_name"
 
 
 class SystemValue(BaseModel):
@@ -35,10 +36,10 @@ class SystemValue(BaseModel):
         "for the correct calculation",
     )
     traditional_name: str = Field(..., description="Traditional name for this type")
-    alternative_name: Union[str, Tuple[str, str]] = Field(
+    alternative_name: str | tuple[str, str] = Field(
         ..., description="Alternative name for this type"
     )
-    verbose_name: Tuple[str, str] = Field(
+    verbose_name: tuple[str, str] = Field(
         ..., description="Full name without abbreviations"
     )
     iec_name: str = Field(..., description="IEC system name")
@@ -51,7 +52,7 @@ class SystemValue(BaseModel):
         None, description="The number of bytes in one unit of this type in system si"
     )
 
-    def __init__(self, **data) -> None:
+    def __init__(self, **data: dict[Any, Any]) -> None:
         super().__init__(**data)
         self.value_base = 1024**self.pow
         self.value_si = 1000**self.pow
@@ -59,15 +60,15 @@ class SystemValue(BaseModel):
             self.si_name = self.traditional_name
 
     def get_size_suffix(
-        self, system: Optional[str] = "traditional"
-    ) -> Optional[Union[str, Tuple[str, str]]]:
+        self, system: str = "traditional"
+    ) -> str | tuple[str, str] | None:
         """
         method return str title for chose type
         :param system: title system for view
          allowed: [si, iec, verbose, alternative, traditional]
         :type system: str
         :return: names for chose system
-        :rtype: Union[str, Tuple[str, str]]
+        :rtype: str | tuple[str, str]
         :raise ValueError: if there is no selected system
         """
         system = system.upper()
@@ -83,17 +84,17 @@ class SystemValue(BaseModel):
     def get_amount(
         self,
         bytes_value: int,
-        round_to: Optional[int] = 2,
-        is_si: Optional[bool] = False,
+        round_to: int = 2,
+        is_si: bool = False,
     ) -> float:
         """
         Method get size of bytes value in system
         :param bytes_value:  bytes to convert
         :type bytes_value: int
         :param round_to: decimal point rounding precision
-        :type round_to:  Optional[int]
+        :type round_to:  int
         :param is_si: is to 'si' system convert
-        :type is_si: Optional[bool]
+        :type is_si: bool
         :return:
         """
         if is_si:
@@ -105,8 +106,8 @@ class SystemValue(BaseModel):
     def get_normalized_size(
         self,
         bytes_value: int,
-        system: Optional[str] = "traditional",
-        round_to: Optional[int] = 2,
+        system: str | None = "traditional",
+        round_to: int | None = 2,
     ) -> str:
         """
         Method convert bytes value in chose system
@@ -141,7 +142,6 @@ class SystemValue(BaseModel):
         return f"{amount}{suffix_amount}"
 
     def __lt__(self, other):
-        result: bool = False
         if isinstance(other, SystemValue):
             result = self.value_base < other.value_base
         elif isinstance(other, Number):
@@ -150,10 +150,10 @@ class SystemValue(BaseModel):
             raise TypeError("incorrect value to compare")
         return result
 
-    def __le__(self, other: Union[Number, SystemValue]):
+    def __le__(self, other: Number | SystemValue):
         return self < other or self == other
 
-    def __gt__(self, other: Union[Number, SystemValue]):
+    def __gt__(self, other: Number | SystemValue):
         result: bool = False
         if isinstance(other, SystemValue):
             result = self.value_base > other.value_base
@@ -163,17 +163,17 @@ class SystemValue(BaseModel):
             raise TypeError("incorrect value type to compare")
         return result
 
-    def __eq__(self, other: Union[Number, SystemValue]):  # type: ignore
+    def __eq__(self, other: Number | SystemValue):  # type: ignore
         result: bool = False
         if isinstance(other, SystemValue):
-            result = super(SystemValue, self).__eq__(other)
+            result = super().__eq__(other)
         elif isinstance(other, Number):
             result = self.value_base == other
         else:
             raise TypeError("incorrect value type to compare")
         return result
 
-    def __ge__(self, other: Union[Number, SystemValue]):
+    def __ge__(self, other: Number | SystemValue):
         return self > other or self == other
 
 
@@ -224,7 +224,7 @@ LIST_SYSTEMS = [
 
 
 def size(
-    bytes_value: int, system: Optional[str] = "traditional", round_to: int = 2
+    bytes_value: int, system: str | None = "traditional", round_to: int = 2
 ) -> str:
     """
     Method for print size of file from bytes to pretty print
@@ -233,7 +233,7 @@ def size(
     :param system:
     :type system:
     :param round_to: decimal point rounding precision
-    :type round_to: Optional[int]
+    :type round_to: int
     :return: converted bytes_value to pretty string
     :rtype: str
     :raise ValueError: if incorrect system name or round_to is less 0
@@ -280,8 +280,8 @@ def size(
             f"Incorrect system name - `{system}`."
             f" Allowed systems {[i.name for i in SystemTypes]}"
         )
-    factor = None  # type: Optional[SystemValue]
-    for _factor in LIST_SYSTEMS:
+    factor = None  # type: SystemValue|None
+    for _factor in LIST_SYSTEMS:  # pragma: no cover
         if bytes_value >= _factor.value_base / 10:
             factor = _factor
             break

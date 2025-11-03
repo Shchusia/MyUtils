@@ -1,14 +1,15 @@
 """
 Module with functions for generate chunks
 """
+
 # pylint: disable=inconsistent-return-statements
 from collections.abc import Generator
-from typing import Any, List, Tuple, Union
+from typing import Any
 
 from .split import _validate_type
 
 
-def chunks(iterable: Union[List[Any], Tuple[Any, ...]], size_chunk: int) -> Generator:
+def chunks(iterable: list[Any] | tuple[Any, ...], size_chunk: int) -> Generator:
     """
     Method for splitting into many parts with len size_chunk generator
     :param iterable: object to split

@@ -2,19 +2,19 @@
 The module contains a function that returns whether an event has occurred
  that has a probability of occurrence
 """
+
 from decimal import Decimal
 from math import floor
 from random import uniform
-from typing import Union
 
 
-def is_fate_in_awe(drop_chance: Union[float, int, Decimal]) -> bool:
+def is_fate_in_awe(drop_chance: float | int | Decimal) -> bool:
     """
     Method determines whether an event has occurred that
      has a certain chance of falling out
     :param drop_chance: the probability of an event occurring
      value between[0, 1]
-    :type drop_chance:  Union[float, int, Decimal]
+    :type drop_chance:  float| int| Decimal
     :return: is got this chance
     :rtype: bool
     :raises ValueError: if the value is not in the allowed range [0, 1]

@@ -5,7 +5,7 @@ from types import GeneratorType
 
 import pytest
 
-from my_utilities.iterables.split import split, split_as_iterable
+from my_utilities.iterables.split import split, split_as_iterable, split_with_overlap
 
 CNT_CHUNKS = 2
 SIZE_ITERABLE_OBJECTS = 10
@@ -50,3 +50,14 @@ def test_split_as_iterable() -> None:
         split_as_iterable(test_dict_range, CNT_CHUNKS)
     split_list = split_as_iterable(test_list_range, CNT_CHUNKS_MORE_SIZE_OBJECTS)
     assert len(split_list[-1]) == 0
+
+def test_split_with_overlap() -> None:
+    list_100 = [i for i in range(100)]
+    n_parts=10
+    len_sub_list = len(list_100) // n_parts
+    overlap = 5
+    for i, tmp_list in enumerate(split_with_overlap(list_100, n_parts=n_parts,overlap=overlap)):
+        if i in [0, len_sub_list-1]:
+            assert len(tmp_list) == (len_sub_list + overlap)
+        else:
+            assert len(tmp_list) == (len_sub_list + (overlap *2))

@@ -11,6 +11,7 @@ from my_utilities.iterables.chunk import chunks
 
 class TestDict(dict):
     """test class"""
+    pass
 
 
 SIZE_CHUNK = 2
