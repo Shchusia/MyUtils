@@ -461,11 +461,10 @@ wheels = [
 
 [[package]]
 name = "my-utilities"
-version = "0.1.1"
+version = "0.1.2"
 source = { virtual = "." }
 dependencies = [
     { name = "pydantic" },
-    { name = "sphinx-autodoc-typehints" },
 ]
 
 [package.dev-dependencies]
@@ -474,6 +473,7 @@ docs = [
     { name = "furo" },
     { name = "sphinx" },
     { name = "sphinx-autobuild" },
+    { name = "sphinx-autodoc-typehints" },
     { name = "sphinx-rtd-theme" },
 ]
 lint = [
@@ -490,10 +490,7 @@ tests = [
 ]
 
 [package.metadata]
-requires-dist = [
-    { name = "pydantic", specifier = ">=2.12.3" },
-    { name = "sphinx-autodoc-typehints", specifier = ">=3.5.2" },
-]
+requires-dist = [{ name = "pydantic", specifier = ">=2.12.3" }]
 
 [package.metadata.requires-dev]
 docs = [
@@ -501,6 +498,7 @@ docs = [
     { name = "furo", specifier = ">=2025.9.25" },
     { name = "sphinx", specifier = ">=8.2.3" },
     { name = "sphinx-autobuild", specifier = ">=2025.8.25" },
+    { name = "sphinx-autodoc-typehints", specifier = ">=3.5.2" },
     { name = "sphinx-rtd-theme", specifier = ">=3.0.2" },
 ]
 lint = [
