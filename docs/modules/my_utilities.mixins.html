@@ -195,22 +195,11 @@
 <li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">my_utilities</a><input aria-label="Toggle navigation of my_utilities" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2 current has-children"><a class="reference internal" href="my_utilities.html">my_utilities package</a><input aria-label="Toggle navigation of my_utilities package" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="my_utilities.iterables.html">my_utilities.iterables package</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">my_utilities.mixins package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="my_utilities.probability.html">my_utilities.probability package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="my_utilities.view.html">my_utilities.view package</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="my_utilities.iterables.html">my_utilities.iterables package</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">my_utilities.mixins package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="my_utilities.probability.html">my_utilities.probability package</a></li>
-<li class="toctree-l2 current has-children"><a class="reference internal" href="my_utilities.html">my_utilities package</a><input aria-label="Toggle navigation of my_utilities package" checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="my_utilities.iterables.html">my_utilities.iterables package</a></li>
 <li class="toctree-l3 current current-page"><a class="current reference internal" href="#">my_utilities.mixins package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="my_utilities.probability.html">my_utilities.probability package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="my_utilities.view.html">my_utilities.view package</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="my_utilities.view.html">my_utilities.view package</a></li>
 </ul>
 </li>
 </ul>
@@ -255,6 +244,194 @@
 <h1>my_utilities.mixins package<a class="headerlink" href="#my-utilities-mixins-package" title="Link to this heading">¶</a></h1>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-my_utilities.mixins.compact_pydantic_serializer">
+<span id="my-utilities-mixins-compact-pydantic-serializer-module"></span><h2>my_utilities.mixins.compact_pydantic_serializer module<a class="headerlink" href="#module-my_utilities.mixins.compact_pydantic_serializer" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="my_utilities.mixins.compact_pydantic_serializer.SerializableMixin">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">my_utilities.mixins.compact_pydantic_serializer.</span></span><span class="sig-name descname"><span class="pre">SerializableMixin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/my_utilities/mixins/compact_pydantic_serializer.html#SerializableMixin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#my_utilities.mixins.compact_pydantic_serializer.SerializableMixin" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Mixin for Pydantic models that provides compact serialization into dictionaries
+with numeric keys and the reverse deserialization.</p>
+<dl class="simple">
+<dt>The main idea:</dt><dd><ul class="simple">
+<li><p>Field names are sorted alphabetically and replaced with integer indices.</p></li>
+<li><p>The model is serialized into a dictionary where keys are field indices.</p></li>
+<li><p>Works recursively for nested models, collections, and enums.</p></li>
+<li><p>During deserialization, numeric keys are mapped back to field names.</p></li>
+</ul>
+</dd>
+<dt>Supports:</dt><dd><ul class="simple">
+<li><p>Primitive types (<cite>int</cite>, <cite>str</cite>, <cite>float</cite>, <cite>bool</cite>, etc.)</p></li>
+<li><p><cite>Enum</cite> types (stored by their <cite>.value</cite>)</p></li>
+<li><p>Nested Pydantic models</p></li>
+<li><p>Collections (<cite>list</cite>, <cite>tuple</cite>, <cite>set</cite>, <cite>dict</cite>)</p></li>
+<li><p>Optional/Union and complex nested structures</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<dl class="simple">
+<dt>class Address(SerializableMixin):</dt><dd><p>city: str
+zip_code: int</p>
+</dd>
+<dt>class User(SerializableMixin):</dt><dd><p>name: str
+age: int
+address: Address</p>
+</dd>
+</dl>
+<p>user = User(name=”Alice”, age=30, address=Address(city=”NY”, zip_code=10001))
+compact = user.to_compact_dict()
+restored = User.from_compact_dict(compact)</p>
+<dl class="field-list simple">
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="my_utilities.mixins.compact_pydantic_serializer.SerializableMixin._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#my_utilities.mixins.compact_pydantic_serializer.SerializableMixin._abc_impl" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="my_utilities.mixins.compact_pydantic_serializer.SerializableMixin._deserialize_arbitrary_dict">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_deserialize_arbitrary_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/my_utilities/mixins/compact_pydantic_serializer.html#SerializableMixin._deserialize_arbitrary_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#my_utilities.mixins.compact_pydantic_serializer.SerializableMixin._deserialize_arbitrary_dict" title="Link to this definition">¶</a></dt>
+<dd><p>Deserialize an arbitrary dictionary that may contain nested structures.</p>
+<p>All keys are converted to strings; nested collections are processed recursively.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>dict</em><em>[</em><em>Any</em><em>, </em><em>Any</em><em>]</em>) – Dictionary with arbitrary key-value types</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Fully deserialized dictionary with string keys</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="my_utilities.mixins.compact_pydantic_serializer.SerializableMixin._deserialize_value">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_deserialize_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/my_utilities/mixins/compact_pydantic_serializer.html#SerializableMixin._deserialize_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#my_utilities.mixins.compact_pydantic_serializer.SerializableMixin._deserialize_value" title="Link to this definition">¶</a></dt>
+<dd><p>Recursively deserialize a value with respect to its annotated field type.</p>
+<p>Supports nested models, enums, lists, tuples, sets, and arbitrary dictionaries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>Any</em>) – Serialized value (int, list, dict, etc.)</p></li>
+<li><p><strong>field_type</strong> (<em>Any</em>) – Type annotation of the field</p></li>
+<li><p><strong>field_info</strong> (<em>Any</em><em>, </em><em>optional</em>) – Optional Pydantic field metadata</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Deserialized value</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="my_utilities.mixins.compact_pydantic_serializer.SerializableMixin._serialize_arbitrary_dict">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_serialize_arbitrary_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/my_utilities/mixins/compact_pydantic_serializer.html#SerializableMixin._serialize_arbitrary_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#my_utilities.mixins.compact_pydantic_serializer.SerializableMixin._serialize_arbitrary_dict" title="Link to this definition">¶</a></dt>
+<dd><p>Serialize an arbitrary dictionary that is not a Pydantic model.</p>
+<p>String keys are kept as-is, values are serialized recursively.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Arbitrary dictionary to serialize</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Serialized dictionary with string keys</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="my_utilities.mixins.compact_pydantic_serializer.SerializableMixin._serialize_model_dict">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_serialize_model_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_class</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/my_utilities/mixins/compact_pydantic_serializer.html#SerializableMixin._serialize_model_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#my_utilities.mixins.compact_pydantic_serializer.SerializableMixin._serialize_model_dict" title="Link to this definition">¶</a></dt>
+<dd><p>Serialize a dictionary representing a Pydantic model into numeric-key format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Dictionary obtained from <code class="docutils literal notranslate"><span class="pre">model_dump()</span></code></p></li>
+<li><p><strong>model_class</strong> (<em>Type</em><em>[</em><em>BaseModel</em><em>]</em>) – Pydantic model class that owns this dictionary</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Serialized dictionary where keys are integer indices</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[int, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="my_utilities.mixins.compact_pydantic_serializer.SerializableMixin._serialize_value">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_serialize_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/my_utilities/mixins/compact_pydantic_serializer.html#SerializableMixin._serialize_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#my_utilities.mixins.compact_pydantic_serializer.SerializableMixin._serialize_value" title="Link to this definition">¶</a></dt>
+<dd><p>Recursively serialize any value (model, collection, enum, etc.) into compact form.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>Any</em>) – Value to serialize</p></li>
+<li><p><strong>field_type</strong> (<em>Any</em>) – Type annotation used for recursive type-aware serialization</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Serialized value</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="my_utilities.mixins.compact_pydantic_serializer.SerializableMixin.from_compact_dict">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_compact_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compact_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/my_utilities/mixins/compact_pydantic_serializer.html#SerializableMixin.from_compact_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#my_utilities.mixins.compact_pydantic_serializer.SerializableMixin.from_compact_dict" title="Link to this definition">¶</a></dt>
+<dd><p>Deserialize a compact dictionary back into a model instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>compact_data</strong> (<em>dict</em><em>[</em><em>int</em><em>, </em><em>Any</em><em>]</em>) – Dictionary obtained from <a class="reference internal" href="#my_utilities.mixins.compact_pydantic_serializer.SerializableMixin.to_compact_dict" title="my_utilities.mixins.compact_pydantic_serializer.SerializableMixin.to_compact_dict"><code class="xref py py-meth docutils literal notranslate"><span class="pre">to_compact_dict()</span></code></a></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Restored model instance</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#my_utilities.mixins.compact_pydantic_serializer.SerializableMixin" title="my_utilities.mixins.compact_pydantic_serializer.SerializableMixin">SerializableMixin</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValidationError</strong> – If deserialized data does not satisfy model constraints</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="my_utilities.mixins.compact_pydantic_serializer.SerializableMixin.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#my_utilities.mixins.compact_pydantic_serializer.SerializableMixin.model_config" title="Link to this definition">¶</a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="my_utilities.mixins.compact_pydantic_serializer.SerializableMixin.to_compact_dict">
+<span class="sig-name descname"><span class="pre">to_compact_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/my_utilities/mixins/compact_pydantic_serializer.html#SerializableMixin.to_compact_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#my_utilities.mixins.compact_pydantic_serializer.SerializableMixin.to_compact_dict" title="Link to this definition">¶</a></dt>
+<dd><p>Serialize the model into a compact dictionary with numeric keys.</p>
+<p>Field names are sorted alphabetically and replaced by sequential indices.
+Values are recursively serialized, including nested models and collections.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Compact serialized representation of the model</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[int, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-my_utilities.mixins.tst_mode">
 <span id="my-utilities-mixins-tst-mode-module"></span><h2>my_utilities.mixins.tst_mode module<a class="headerlink" href="#module-my_utilities.mixins.tst_mode" title="Link to this heading">¶</a></h2>
@@ -419,6 +596,21 @@ Otherwise → emits a warning.</p>
             <ul>
 <li><a class="reference internal" href="#">my_utilities.mixins package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-my_utilities.mixins.compact_pydantic_serializer">my_utilities.mixins.compact_pydantic_serializer module</a><ul>
+<li><a class="reference internal" href="#my_utilities.mixins.compact_pydantic_serializer.SerializableMixin"><code class="docutils literal notranslate"><span class="pre">SerializableMixin</span></code></a><ul>
+<li><a class="reference internal" href="#my_utilities.mixins.compact_pydantic_serializer.SerializableMixin._abc_impl"><code class="docutils literal notranslate"><span class="pre">SerializableMixin._abc_impl</span></code></a></li>
+<li><a class="reference internal" href="#my_utilities.mixins.compact_pydantic_serializer.SerializableMixin._deserialize_arbitrary_dict"><code class="docutils literal notranslate"><span class="pre">SerializableMixin._deserialize_arbitrary_dict()</span></code></a></li>
+<li><a class="reference internal" href="#my_utilities.mixins.compact_pydantic_serializer.SerializableMixin._deserialize_value"><code class="docutils literal notranslate"><span class="pre">SerializableMixin._deserialize_value()</span></code></a></li>
+<li><a class="reference internal" href="#my_utilities.mixins.compact_pydantic_serializer.SerializableMixin._serialize_arbitrary_dict"><code class="docutils literal notranslate"><span class="pre">SerializableMixin._serialize_arbitrary_dict()</span></code></a></li>
+<li><a class="reference internal" href="#my_utilities.mixins.compact_pydantic_serializer.SerializableMixin._serialize_model_dict"><code class="docutils literal notranslate"><span class="pre">SerializableMixin._serialize_model_dict()</span></code></a></li>
+<li><a class="reference internal" href="#my_utilities.mixins.compact_pydantic_serializer.SerializableMixin._serialize_value"><code class="docutils literal notranslate"><span class="pre">SerializableMixin._serialize_value()</span></code></a></li>
+<li><a class="reference internal" href="#my_utilities.mixins.compact_pydantic_serializer.SerializableMixin.from_compact_dict"><code class="docutils literal notranslate"><span class="pre">SerializableMixin.from_compact_dict()</span></code></a></li>
+<li><a class="reference internal" href="#my_utilities.mixins.compact_pydantic_serializer.SerializableMixin.model_config"><code class="docutils literal notranslate"><span class="pre">SerializableMixin.model_config</span></code></a></li>
+<li><a class="reference internal" href="#my_utilities.mixins.compact_pydantic_serializer.SerializableMixin.to_compact_dict"><code class="docutils literal notranslate"><span class="pre">SerializableMixin.to_compact_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-my_utilities.mixins.tst_mode">my_utilities.mixins.tst_mode module</a><ul>
 <li><a class="reference internal" href="#my_utilities.mixins.tst_mode.TestModeMixin"><code class="docutils literal notranslate"><span class="pre">TestModeMixin</span></code></a><ul>
 <li><a class="reference internal" href="#my_utilities.mixins.tst_mode.TestModeMixin.__handle_error"><code class="docutils literal notranslate"><span class="pre">TestModeMixin.__handle_error()</span></code></a></li>
