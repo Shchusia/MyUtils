@@ -12,6 +12,7 @@ from .split import _validate_type
 def chunks(iterable: list[Any] | tuple[Any, ...], size_chunk: int) -> Generator:
     """
     Method for splitting into many parts with len size_chunk generator
+
     :param iterable: object to split
     :type iterable: Union[List[Any], Tuple[Any, ...]]
     :param size_chunk: size_chunk

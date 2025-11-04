@@ -53,7 +53,13 @@ tasks:
     desc: Publish the compiled library
     cmds:
       - uv publish
-
+  init_docs:
+    desc: init docs
+    cmds:
+      - mkdir docs
+      - cd docs
+      - sphinx-quickstart
+      - echo 'change `./docs/conf.py`'
   docs:
     desc: Generate documentation
     dir: ./docs

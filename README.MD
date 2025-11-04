@@ -6,7 +6,7 @@
 [![Coverage Status](https://img.shields.io/badge/Version-0.1.1-informational)](https://pypi.org/project/orch-serv/)
 
 
-> Repo with help functions and classes for work
+> Library with help functions and classes for work
 
 ### Installation
 
@@ -16,7 +16,7 @@ pip install my_utilities
 
 
 What contains:
-+ helper functions for working with [iterables](my_utilities/iterables/README.MD) objects 
-+ helper functions for working with [probability](my_utilities/probability/README.MD)
-+ helper functions for pretty [view](my_utilities/view/README.MD)
-+ [mixins](my_utilities/mixins/README.MD)
++ helper functions for working with [iterables](https://github.com/Shchusia/MyUtils/tree/master/my_utilities/iterables/README.MD) objects 
++ helper functions for working with [probability](https://github.com/Shchusia/MyUtils/tree/master/my_utilities/probability/README.MD)
++ helper functions for pretty [view](https://github.com/Shchusia/MyUtils/tree/master/my_utilities/view/README.MD)
++ [mixins](https://github.com/Shchusia/MyUtils/tree/master/my_utilities/mixins/README.MD)

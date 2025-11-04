@@ -10,6 +10,7 @@ from typing import Any
 def _validate_type(iterable: list[Any] | tuple[Any, ...]) -> type | None:
     """
     Validate the type of variable iterable
+
     :param iterable: Iterable type to variable
     :type iterable: Union[List[Any], Tuple[Any, ...]]
     :return: if correct type variable `iterable` than return type
@@ -24,9 +25,12 @@ def _validate_type(iterable: list[Any] | tuple[Any, ...]) -> type | None:
     return type(iterable)
 
 
-def split(iterable: list[Any] | tuple[Any, ...], cnt: int) -> Generator:
+def split(
+    iterable: list[Any] | tuple[Any, ...], cnt: int
+) -> Generator[list[Any] | tuple[Any, ...], None, None]:
     """
     Method for splitting into equal cnt parts generator
+
     :param iterable: object to split
     :type iterable: Union[List[Any], Tuple[Any, ...]]
     :param cnt: cnt partitions
@@ -46,6 +50,7 @@ def split_as_iterable(
 ) -> list[list[Any] | tuple[tuple[Any]]]:
     """
     Method for splitting into equal parts
+
     :param iterable: object to split
     :type iterable: Union[List[Any], Tuple[Any, ...]]
     :param cnt: cnt partitions
@@ -59,9 +64,27 @@ def split_as_iterable(
 
 
 def split_with_overlap(
-    data: list, n_parts: int = 10, overlap: int = 0
-) -> Iterable[list]:
+    data: list[Any] | tuple[Any, ...], n_parts: int = 10, overlap: int = 0
+) -> Generator[list[Any] | tuple[Any, ...], None, None]:
     """
+    Split a sequence into several overlapping parts.
+
+    This function divides the input sequence into `n_parts` approximately equal
+    chunks, with a specified number of overlapping elements between consecutive parts.
+    The overlap ensures smooth transitions between parts, which can be useful for
+    signal processing, data batching, or sliding window operations.
+
+    :param data: The input iterable (e.g., list or tuple) to split.
+    :type data: list[Any] | tuple[Any, ...]
+    :param n_parts: The number of parts to split the data into.
+    :type n_parts: int
+    :param overlap: The number of elements each part should overlap with the next.
+    :type overlap: int
+    :return: A generator yielding slices of `data`, each with the specified overlap.
+    :rtype: Generator[list[Any], None, None]
+    :raises ValueError: If `n_parts` is less than 1 or greater than the length of `data`.
+    :raises TypeError: If `data` is not a list or tuple.
+
     >>> list_ = [i for i in range(100)]
     >>> for i in split_with_overlap(list_, 10,3):
     >>>     print(i)
