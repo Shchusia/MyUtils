@@ -42,7 +42,7 @@ tasks:
   sync:
     desc: Update libs
     cmds:
-      - uv sync -U --group lint --group tests --group docs_old
+      - uv sync -U --group lint --group tests --group docs
 
   build:
     desc: Build library
