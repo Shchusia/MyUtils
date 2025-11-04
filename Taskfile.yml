@@ -64,8 +64,11 @@ tasks:
     desc: Generate documentation
     dir: ./docs
     cmds:
-      - uv run sphinx-apidoc -o . ../my_utilities
+      - uv run sphinx-apidoc -f -o source/modules ../my_utilities
       - uv run make html
+      - mv -f source/modules/my_utilities.rst source/modules/modules.rst
+      - cp -r -f build/html/* ./
+      - rm -rf ./build
 
   docspub:
     desc: publish docs in git (use after commit changes)
