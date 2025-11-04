@@ -47,6 +47,7 @@ tasks:
   build:
     desc: Build library
     cmds:
+      - rm -rf dist
       - uv build
 
   publish:
