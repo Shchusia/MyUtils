@@ -47,7 +47,7 @@ def split(
 
 def split_as_iterable(
     iterable: list[Any] | tuple[Any, ...], cnt: int
-) -> list[list[Any] | tuple[tuple[Any]]]:
+) -> list[list[Any] | list[tuple[Any, ...]]]:  # type: ignore
     """
     Method for splitting into equal parts
 
@@ -60,7 +60,7 @@ def split_as_iterable(
     :raises TypeError: if incorrect type of `iterable` variable
     """
     _current_type = _validate_type(iterable)  # type: type
-    return _current_type(split(iterable=iterable, cnt=cnt))
+    return _current_type(split(iterable=iterable, cnt=cnt))  # type: ignore
 
 
 def split_with_overlap(

@@ -21,7 +21,7 @@ tasks:
   test:
     desc: Run tests
     cmds:
-      - coverage run -m pytest tests -s --cov=my_utilities --cov-report=term-missing -o log_cli=true
+      - coverage run -m pytest tests -s --cov=my_utilities --cov-branch --cov-report=term-missing -o log_cli=true
     silent: true
 
   publishtest:

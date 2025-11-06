@@ -52,7 +52,7 @@ class SerializableMixin(BaseModel):
         :rtype: dict[int, Any]
         """
         data = self.model_dump()
-        return self._serialize_value(data, self.__class__)
+        return self._serialize_value(data, self.__class__)  # type:ignore
 
     @classmethod
     def _serialize_value(cls, value: Any, field_type: Any = None) -> Any:  # noqa
@@ -222,7 +222,7 @@ class SerializableMixin(BaseModel):
                 and issubclass(field_type, BaseModel)
                 and hasattr(field_type, "from_compact_dict")
             ):
-                return field_type.from_compact_dict(value)
+                return field_type.from_compact_dict(value)  # type:ignore
 
             elif origin is dict:
                 key_type, value_type = args if len(args) == 2 else (Any, Any)

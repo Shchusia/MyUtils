@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "pydantic>=2.12.3",
+    "pyjwt>=2.10.1",
 ]
 
 [dependency-groups]
@@ -63,7 +64,7 @@ exclude = [
     "__init__.py"
 ]
 select = ["E", "F", "I", "UP", "C90", "B"]
-ignore = ["E501", "E203", "F401", "UP038"]
+ignore = ["E501", "E203", "F401", "UP038", "I001"]
 fixable = ["I001", "F401"]
 
 
@@ -84,6 +85,9 @@ mypy_path = "stubs"
 python_version = "3.12"
 check_untyped_defs = true
 disallow_untyped_defs = true
+strict = true
+no_strict_optional = true
+exclude = "^tests/**/.py$"
 
 [[tool.mypy.overrides]]
 module = "*"
@@ -99,4 +103,7 @@ ignore_missing_imports = true
 members = [
     "venv",
 ]
+
+[mypy-tests]
+ignore_errors = true
 

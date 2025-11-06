@@ -1,3 +1,4 @@
+# mypy: ignore-errors
 from __future__ import annotations
 from my_utilities.mixins.compact_pydantic_serializer import SerializableMixin
 from typing import Any, Union, Optional, Dict, List, Tuple, Set
@@ -5,23 +6,23 @@ from enum import StrEnum
 
 
 class Cities(StrEnum):
-    LONDON = 'london'
-    NEW_YORK = 'new york'
+    LONDON = "london"
+    NEW_YORK = "new york"
 
 
 class Gender(StrEnum):
-    MALE = 'male'
-    FEMALE = 'female'
+    MALE = "male"
+    FEMALE = "female"
 
 
 class PetsType(StrEnum):
-    cat = 'cat'
-    dog = 'dog'
+    cat = "cat"
+    dog = "dog"
 
 
 class Status(StrEnum):
-    ACTIVE = 'active'
-    INACTIVE = 'inactive'
+    ACTIVE = "active"
+    INACTIVE = "inactive"
 
 
 class Address(SerializableMixin):
@@ -55,7 +56,7 @@ class User(SerializableMixin):
     address: Address
     gender: Gender
     is_married: bool = False
-    child: Optional['User'] = None
+    child: Optional["User"] = None
     pets: List[Pet] = []
     other_data: Tuple[Pet, ...]
     other_data2: Tuple[V1, V2]
@@ -80,8 +81,7 @@ class ModelWithComplexUnion(SerializableMixin):
 
 def test_arbitrary_dict_with_non_string_keys():
     model = ModelWithIntDict(
-        int_dict={1: "one", 2: "two"},
-        any_dict={"key": "value", 42: "answer"}
+        int_dict={1: "one", 2: "two"}, any_dict={"key": "value", 42: "answer"}
     )
 
     compact = model.to_compact_dict()
@@ -101,10 +101,10 @@ def test_complex_tuple_with_different_types():
         other_data=(
             Pet(pet_type=PetsType.cat, name="Cat1"),
             Pet(pet_type=PetsType.dog, name="Dog1"),
-            Pet(pet_type=PetsType.cat, name="Cat2")
+            Pet(pet_type=PetsType.cat, name="Cat2"),
         ),
         other_data2=(V1(v1=1), V2(v2="test")),
-        nested_list=[[1, 2], [3, 4]]
+        nested_list=[[1, 2], [3, 4]],
     )
 
     compact = user.to_compact_dict()
@@ -132,17 +132,13 @@ def test_arbitrary_dict_nested_structures():
             "level2": {
                 "level3": [1, 2, 3],
                 "nested_set": {1, 2, 3},
-                "nested_tuple": (1, "two", 3.0)
+                "nested_tuple": (1, "two", 3.0),
             }
         },
-        "simple": "value"
+        "simple": "value",
     }
 
-    address = Address(
-        city=Cities.NEW_YORK,
-        zip_code=10001,
-        metadata=complex_metadata
-    )
+    address = Address(city=Cities.NEW_YORK, zip_code=10001, metadata=complex_metadata)
 
     compact = address.to_compact_dict()
     restored = Address.from_compact_dict(compact)
@@ -152,10 +148,7 @@ def test_arbitrary_dict_nested_structures():
 
 
 def test_enum_deserialization_with_invalid_value():
-    invalid_enum_data = {
-        0: "invalid_city",
-        1: 10001
-    }
+    invalid_enum_data = {0: "invalid_city", 1: 10001}
 
     try:
         restored = Address.from_compact_dict(invalid_enum_data)
@@ -179,7 +172,7 @@ def test_empty_collections_and_none():
         optional_field=None,
         nested_list=[],
         mixed_data=None,
-        union_field=0
+        union_field=0,
     )
 
     compact = user.to_compact_dict()
@@ -194,8 +187,7 @@ def test_empty_collections_and_none():
 
 def test_complex_union_types():
     model = ModelWithComplexUnion(
-        complex_union=["one", "two", "three"],
-        simple_union="string_value"
+        complex_union=["one", "two", "three"], simple_union="string_value"
     )
 
     compact = model.to_compact_dict()
@@ -205,8 +197,7 @@ def test_complex_union_types():
     assert restored.complex_union == ["one", "two", "three"]
 
     model2 = ModelWithComplexUnion(
-        complex_union={"key1": 1, "key2": 2},
-        simple_union=42
+        complex_union={"key1": 1, "key2": 2}, simple_union=42
     )
 
     compact2 = model2.to_compact_dict()
@@ -218,9 +209,7 @@ def test_complex_union_types():
 
 def test_set_serialization_deserialization():
     pet = Pet(
-        pet_type=PetsType.dog,
-        name="SetTest",
-        tags={"large", "friendly", "active"}
+        pet_type=PetsType.dog, name="SetTest", tags={"large", "friendly", "active"}
     )
 
     compact = pet.to_compact_dict()
@@ -256,26 +245,20 @@ def test_edge_case_field_types():
 
     model1 = EdgeCaseModel(
         dict_with_any={1: "one", "two": 2, 3.0: [1, 2, 3]},
-        bare_any={"complex": "structure"}
+        bare_any={"complex": "structure"},
     )
 
     compact1 = model1.to_compact_dict()
     restored1 = EdgeCaseModel.from_compact_dict(compact1)
     assert model1 == restored1
 
-    model2 = EdgeCaseModel(
-        optional_list=None,
-        union_complex=["a", "b", "c"]
-    )
+    model2 = EdgeCaseModel(optional_list=None, union_complex=["a", "b", "c"])
 
     compact2 = model2.to_compact_dict()
     restored2 = EdgeCaseModel.from_compact_dict(compact2)
     assert model2 == restored2
 
-    model3 = EdgeCaseModel(
-        union_complex={"x": 1, "y": 2},
-        bare_any=(1, 2, 3)
-    )
+    model3 = EdgeCaseModel(union_complex={"x": 1, "y": 2}, bare_any=(1, 2, 3))
 
     compact3 = model3.to_compact_dict()
     restored3 = EdgeCaseModel.from_compact_dict(compact3)
@@ -283,19 +266,11 @@ def test_edge_case_field_types():
 
 
 def test_direct_method_calls():
-    arbitrary_dict = {
-        "key1": "value1",
-        "key2": [1, 2, 3],
-        "key3": {"nested": "value"}
-    }
+    arbitrary_dict = {"key1": "value1", "key2": [1, 2, 3], "key3": {"nested": "value"}}
     result = User._serialize_arbitrary_dict(arbitrary_dict)
     assert isinstance(result, dict)
 
-    compact_arbitrary = {
-        0: "value1",
-        1: [1, 2, 3],
-        2: {0: "value"}
-    }
+    compact_arbitrary = {0: "value1", 1: [1, 2, 3], 2: {0: "value"}}
     result = User._deserialize_arbitrary_dict(compact_arbitrary)
     assert isinstance(result, dict)
 
@@ -310,10 +285,7 @@ def test_tuple_with_less_args_than_elements():
         short_tuple: Tuple[str, int]
         values: Any
 
-    model = TupleTestModel(
-        short_tuple=("hello", 42),
-        values="test"
-    )
+    model = TupleTestModel(short_tuple=("hello", 42), values="test")
 
     compact = model.to_compact_dict()
     restored = TupleTestModel.from_compact_dict(compact)
@@ -328,7 +300,7 @@ def test_deserialize_arbitrary_dict_complex():
         "nested_list": [1, 2, 3],
         "nested_dict": {"a": 1, "b": 2},
         "nested_tuple": (4, 5, 6),
-        "nested_set": {7, 8, 9}
+        "nested_set": {7, 8, 9},
     }
 
     user = User(
@@ -338,7 +310,7 @@ def test_deserialize_arbitrary_dict_complex():
         gender=Gender.FEMALE,
         other_data=(Pet(pet_type=PetsType.cat, name="Test"),),
         other_data2=(V1(v1=1), V2(v2="test")),
-        mixed_data=complex_data
+        mixed_data=complex_data,
     )
 
     compact = user.to_compact_dict()
@@ -357,7 +329,7 @@ def test_mixed_data_structures():
         "tuple_data": (1, 2, 3),
         "set_data": {1, 2, 3},
         "none_value": None,
-        "bool_value": True
+        "bool_value": True,
     }
 
     user = User(
@@ -367,7 +339,7 @@ def test_mixed_data_structures():
         gender=Gender.FEMALE,
         other_data=(Pet(pet_type=PetsType.cat, name="Mix"),),
         other_data2=(V1(v1=1), V2(v2="test")),
-        mixed_data=complex_mixed_data
+        mixed_data=complex_mixed_data,
     )
 
     compact = user.to_compact_dict()
@@ -386,11 +358,7 @@ def test_mixed_data_structures():
 
 
 def test_deserialize_arbitrary_dict_with_numeric_keys():
-    numeric_key_data = {
-        0: "zero",
-        1: "one",
-        2: {"nested": "value"}
-    }
+    numeric_key_data = {0: "zero", 1: "one", 2: {"nested": "value"}}
 
     user = User(
         name="NumericKeys",
@@ -399,7 +367,7 @@ def test_deserialize_arbitrary_dict_with_numeric_keys():
         gender=Gender.MALE,
         other_data=(Pet(pet_type=PetsType.dog, name="Rex"),),
         other_data2=(V1(v1=1), V2(v2="test")),
-        mixed_data=numeric_key_data
+        mixed_data=numeric_key_data,
     )
 
     compact = user.to_compact_dict()
@@ -435,17 +403,11 @@ def test_serialize_arbitrary_dict_with_complex_nested():
     complex_dict = {
         "list_with_dicts": [
             {"key1": "value1"},
-            {"key2": "value2", "nested": {"key3": "value3"}}
+            {"key2": "value2", "nested": {"key3": "value3"}},
         ],
-        "tuple_with_dicts": (
-            {"a": 1},
-            {"b": 2}
-        ),
+        "tuple_with_dicts": ({"a": 1}, {"b": 2}),
         "set_with_data": {1, 2, 3},
-        "mixed": {
-            "inner_list": [{"x": 1}, {"y": 2}],
-            "inner_tuple": ({"z": 3},)
-        }
+        "mixed": {"inner_list": [{"x": 1}, {"y": 2}], "inner_tuple": ({"z": 3},)},
     }
 
     result = User._serialize_arbitrary_dict(complex_dict)
@@ -530,7 +492,7 @@ def test_complex_arbitrary_dict_with_different_value_types():
         "none": None,
         "bool": True,
         "tuple": (1, 2),
-        "set": {1, 2, 3}
+        "set": {1, 2, 3},
     }
 
     result = User._serialize_arbitrary_dict(complex_data)
@@ -547,7 +509,6 @@ def test_complex_arbitrary_dict_with_different_value_types():
 
 def test_deserialize_value_with_unknown_dict_type():
     test_dict = {0: "value1", 1: "value2"}
-
 
     result = User._deserialize_value(test_dict, str)
 
@@ -573,14 +534,9 @@ def test_serialize_value_tuple_no_field_type_():
         "nested_dict": {
             "inner_list": [1, 2, 3],
             "inner_tuple": (4, 5, 6),
-            "deep_nested": {
-                "value": "test"
-            }
+            "deep_nested": {"value": "test"},
         },
-        "list_with_dicts": [
-            {"a": 1},
-            {"b": 2}
-        ]
+        "list_with_dicts": [{"a": 1}, {"b": 2}],
     }
 
     result = SerializableMixin._serialize_arbitrary_dict(complex_data)
@@ -634,11 +590,7 @@ def test_serialize_arbitrary_dict_with_all_collection_types():
         "tuple": (4, 5, 6),
         "set": {7, 8, 9},
         "dict": {"nested": "value"},
-        "mixed": [
-            {"a": 1},
-            (2, 3),
-            {4, 5}
-        ]
+        "mixed": [{"a": 1}, (2, 3), {4, 5}],
     }
 
     result = SerializableMixin._serialize_arbitrary_dict(test_data)
