@@ -46,7 +46,6 @@ class DictCache(CacheEngine):
         if key not in self._memory:
             return None
         if self._is_expired(key):
-            print("expixred")
             self.delete(key)
             return None
         return self._memory[key]

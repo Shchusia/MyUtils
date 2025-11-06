@@ -4,3 +4,4 @@ from .tests_view import *
 from .tests_mixins import *
 from .tests_singleton import *
 from .tests_jwt_handler import *
+from .tests_types import *
