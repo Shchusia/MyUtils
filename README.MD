@@ -3,7 +3,7 @@
 [![Coverage Status](https://img.shields.io/badge/%20Python%20Versions-%3E%3D3.12-informational)](https://pypi.org/project/orch-serv/)
 [![Coverage Status](https://coveralls.io/repos/github/Shchusia/MyUtils/badge.svg?branch=master)](https://coveralls.io/github/Shchusia/MyUtils?branch=master)
 
-[![Coverage Status](https://img.shields.io/badge/Version-0.1.1-informational)](https://pypi.org/project/orch-serv/)
+[![Coverage Status](https://img.shields.io/badge/Version-0.1.4-informational)](https://pypi.org/project/orch-serv/)
 [![Coverage Status](https://img.shields.io/badge/Docs-passed-green)](https://shchusia.github.io/MyUtils/)
 
 
