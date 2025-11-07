@@ -1,1 +1,1 @@
-from .tests_ttl_dict import *
+from .test_ttl_dict import *
