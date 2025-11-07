@@ -22,3 +22,7 @@ What contains:
 + helper functions for working with [probability](https://github.com/Shchusia/MyUtils/tree/master/my_utilities/probability/README.MD)
 + helper functions for pretty [view](https://github.com/Shchusia/MyUtils/tree/master/my_utilities/view/README.MD)
 + [mixins](https://github.com/Shchusia/MyUtils/tree/master/my_utilities/mixins/README.MD)
++ custom [types](https://github.com/Shchusia/MyUtils/tree/master/my_utilities/types/README.MD)
++ pattern [singleton](https://github.com/Shchusia/MyUtils/tree/master/my_utilities/singleton/README.MD)
++ [jwt_handler](https://github.com/Shchusia/MyUtils/tree/master/my_utilities/jwt_handler/README.MD)
++ [cache engine](https://github.com/Shchusia/MyUtils/tree/master/my_utilities/cache/README.MD)
