@@ -1,6 +1,7 @@
 """
 Test for module chunk
 """
+# mypy: ignore-errors
 from types import GeneratorType
 from typing import List, Tuple, Union
 
@@ -11,6 +12,7 @@ from my_utilities.iterables.chunk import chunks
 
 class TestDict(dict):
     """test class"""
+
     pass
 
 

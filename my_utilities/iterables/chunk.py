@@ -9,7 +9,9 @@ from typing import Any
 from .split import _validate_type
 
 
-def chunks(iterable: list[Any] | tuple[Any, ...], size_chunk: int) -> Generator:
+def chunks(
+    iterable: list[Any] | tuple[Any, ...], size_chunk: int
+) -> Generator[list[Any] | tuple[Any, ...], None, None]:
     """
     Method for splitting into many parts with len size_chunk generator
 

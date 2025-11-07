@@ -74,7 +74,7 @@ class SystemValue(BaseModel):
         system = system.upper()
         try:
             name_key = SystemTypes[system].value
-            return self.__getattribute__(name_key)
+            return self.__getattribute__(name_key)  # type: ignore
         except KeyError:
             raise ValueError(
                 f"Incorrect name system."
@@ -89,6 +89,7 @@ class SystemValue(BaseModel):
     ) -> float:
         """
         Method get size of bytes value in system
+
         :param bytes_value:  bytes to convert
         :type bytes_value: int
         :param round_to: decimal point rounding precision

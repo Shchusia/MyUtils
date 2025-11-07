@@ -1,6 +1,7 @@
 """
 Tests for module split
 """
+# mypy: ignore-errors
 from types import GeneratorType
 
 import pytest
@@ -51,13 +52,16 @@ def test_split_as_iterable() -> None:
     split_list = split_as_iterable(test_list_range, CNT_CHUNKS_MORE_SIZE_OBJECTS)
     assert len(split_list[-1]) == 0
 
+
 def test_split_with_overlap() -> None:
     list_100 = [i for i in range(100)]
-    n_parts=10
+    n_parts = 10
     len_sub_list = len(list_100) // n_parts
     overlap = 5
-    for i, tmp_list in enumerate(split_with_overlap(list_100, n_parts=n_parts,overlap=overlap)):
-        if i in [0, len_sub_list-1]:
+    for i, tmp_list in enumerate(
+        split_with_overlap(list_100, n_parts=n_parts, overlap=overlap)
+    ):
+        if i in [0, len_sub_list - 1]:
             assert len(tmp_list) == (len_sub_list + overlap)
         else:
-            assert len(tmp_list) == (len_sub_list + (overlap *2))
+            assert len(tmp_list) == (len_sub_list + (overlap * 2))

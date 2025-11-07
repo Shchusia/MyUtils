@@ -1,6 +1,7 @@
 """
 tests for module `my_utilities.probability.probability_event_occurring.py`
 """
+# mypy: ignore-errors
 from decimal import Decimal
 
 import pytest

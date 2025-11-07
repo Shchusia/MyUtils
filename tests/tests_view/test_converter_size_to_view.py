@@ -1,11 +1,12 @@
 """
 Tests for module `my_utilities.view.converter_size_to_view`
 """
+# mypy: ignore-errors
 # pylint: disable=too-few-public-methods
 from typing import Dict, List, Optional, Tuple, Type, TypeVar, Union
 
 import pytest
-from pydantic import BaseModel,ConfigDict
+from pydantic import BaseModel, ConfigDict
 
 from my_utilities.view.converter_size_to_pretty_view import SystemValue, size
 

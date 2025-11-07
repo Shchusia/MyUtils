@@ -21,7 +21,7 @@ tasks:
   test:
     desc: Run tests
     cmds:
-      - coverage run -m pytest tests -s --cov=my_utilities --cov-report=term-missing -o log_cli=true
+      - coverage run -m pytest tests -s --cov=my_utilities --cov-branch --cov-report=term-missing -o log_cli=true
     silent: true
 
   publishtest:
@@ -65,9 +65,10 @@ tasks:
     desc: Generate documentation
     dir: ./docs
     cmds:
+      - rm -rf docs/build docs/source/modules
       - uv run sphinx-apidoc -f -o source/modules ../my_utilities
-      - uv run make html
       - mv -f source/modules/my_utilities.rst source/modules/modules.rst
+      - uv run make html
       - cp -r -f build/html/* ./
       - rm -rf ./build
 
