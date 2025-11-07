@@ -14,10 +14,13 @@ class TTLDict:
      dictionary automatically expire and get removed after
      a specified duration.
 
-    Attributes:
-        default_ttl (int): The default time-to-live for keys in seconds.
-        _dict (OrderedDict): The main dictionary to store key-value pairs.
-        _timers (dict): A dictionary to store Timer objects for each key.
+
+    :param default_ttl: The default time-to-live for keys in seconds.
+    :type default_ttl: int
+    :param _dict:  The main dictionary to store key-value pairs.
+    :type _dict: OrderedDict
+    :param _timers: A dictionary to store Timer objects for each key.
+    :type _timers: dict
     """
 
     def __init__(
@@ -25,6 +28,14 @@ class TTLDict:
         default_ttl: int = 300,
         function_on_expired: Callable[[Any], None] | None = None,
     ) -> None:  # pragma: no cover
+        """
+        init ttl dict
+
+        :param default_ttl: The default time-to-live for keys in seconds.
+        :type default_ttl: int
+        :param function_on_expired: the function that will be used when the key expires
+        :type function_on_expired: Callable[[Any], None] | None
+        """
         self._default_ttl = default_ttl
         self._dict = OrderedDict()  # type: ignore
         self._timers = {}  # type: ignore
@@ -35,16 +46,18 @@ class TTLDict:
         key: Any,
         value: Any,
     ) -> None:
-        # if self._dict.get(key) is None:
-        #     DEFAULT_LOGGER.debug("add key %s", key)
         self._dict[key] = value
         self._set_ttl(key, self._default_ttl)
 
     def _set_ttl(self, key: Any, ttl: int) -> None:
         """
-        Args:
-            key: The key for which the TTL (Time To Live) is being set.
-            ttl: The time in seconds after which the key should expire.
+        Set ttl for key
+
+        :param key: The key for which the TTL (Time To Live) is being set.
+        :type key: Any
+        :param ttl: The time in seconds after which the key should expire.
+        :type ttl: int
+        :rtype: None
 
         """
         if key in self._timers:
@@ -59,11 +72,12 @@ class TTLDict:
         If the key exists in the internal dictionary, it resets its TTL to the default
          TTL value. If the key does not exist, a KeyError is raised.
 
-        Args:
-            key: The key for which the TTL is to be extended.
 
-        Raises:
-            KeyError: If the key is not found in the internal dictionary.
+        :param key: The key for which the TTL is to be extended.
+        :type key: Any
+        :raises KeyError: If the key is not found in the internal dictionary.
+        :rtype: None
+
         """
         if key not in self._dict:
             raise KeyError(f"Key {key} not found")
@@ -83,8 +97,10 @@ class TTLDict:
 
     def _expire(self, key: Any) -> None:
         """
-        Args:
-            key: The key of the item to expire from the dictionary.
+        a method for the timer that will be called when the timer expires
+
+        :param key: The key of the item to expire from the dictionary.
+        :type key: Any
         """
         self._cleanup(key, is_expire_cleanup=True)
         del self._dict[key]
@@ -92,28 +108,29 @@ class TTLDict:
 
     def _cleanup(self, key: Any, is_expire_cleanup: bool = False) -> None:
         """
-        Args:
-            key: The key used to identify the item to be cleaned up.
+        method for cleaning the key
+
+        :param key: The key used to identify the item to be cleaned up.
+        :type key: Any
         """
         if is_expire_cleanup and self._on_expired is not None:
             self._on_expired(key)
 
-    def items(self) -> Any:
+    def items(self) -> tuple[list[Any], list[Any]]:
         """
         Returns all items in the dictionary.
 
-        Returns:
-            dict_items: A view object that displays a list of a dictionary's
-             key-value tuple pairs.
+        :returns: A view object that displays a list of a dictionary's
+        :rtype: tuple[list[Any], list[Any]]
         """
-        return self._dict.items()
+        return self._dict.items()  # type: ignore
 
     def values(self) -> Any:
         """
         Gets the values from the internal dictionary.
 
-        Returns:
-            dict_values: An object containing all the values in the dictionary.
+        :returns: An object containing all the values in the dictionary.
+        :rtype: list[Any]
         """
         return self._dict.values()
 
@@ -121,8 +138,8 @@ class TTLDict:
         """
         Returns the keys of the internal dictionary.
 
-        Returns:
-            dict_keys: A view object that displays a list of all the keys.
+        :returns: A view object that displays a list of all the keys.
+        :rtype: list[Any]
         """
         return self._dict.keys()
 

@@ -136,6 +136,7 @@ class JWTAuthHandler(metaclass=SingletonMeta):
     ) -> tuple[str | None, dict[str, Any] | None, dict[str, Any] | None]:
         """
         Method for verify token
+
         :param token:
         :param is_access_token:
         :param validate_exp:

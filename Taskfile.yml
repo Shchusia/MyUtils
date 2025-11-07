@@ -65,9 +65,10 @@ tasks:
     desc: Generate documentation
     dir: ./docs
     cmds:
+      - rm -rf docs/build docs/source/modules
       - uv run sphinx-apidoc -f -o source/modules ../my_utilities
-      - uv run make html
       - mv -f source/modules/my_utilities.rst source/modules/modules.rst
+      - uv run make html
       - cp -r -f build/html/* ./
       - rm -rf ./build
 

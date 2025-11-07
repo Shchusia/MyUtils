@@ -1,7 +1,0 @@
-my_utilities
-============
-
-.. toctree::
-   :maxdepth: 4
-
-   my_utilities
